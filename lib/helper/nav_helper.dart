@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:test_project/screen/admin/add_task_screen.dart';
 import 'package:test_project/screen/admin/home_page_admin.dart';
 import 'package:test_project/screen/login_screen.dart';
+import 'package:test_project/screen/user/user_home_screen.dart';
 
 import 'nav_observer.dart';
 
@@ -13,6 +14,8 @@ const String landingRoute = "/landingRoute";
 const String homeScreenAdmin = "/homeScreenAdmin";
 const String addTaskScreen = "/addTaskScreen";
 
+
+const String homeScreenUser = "/homeScreenUser";
 
 
 Route<Object?>? generateRoute(RouteSettings settings) {
@@ -32,6 +35,10 @@ Route<Object?>? getRoute(String? name, {LinkedHashMap? args, Function? result}) 
     case addTaskScreen:
       return MaterialPageRoute(
           builder: (context) =>  AddTaskScreen(),
+          settings: RouteSettings(name: name));
+    case homeScreenUser:
+      return MaterialPageRoute(
+          builder: (context) =>  UserHomeScreen(),
           settings: RouteSettings(name: name));
 
 
