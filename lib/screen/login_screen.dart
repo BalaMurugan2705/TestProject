@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:test_project/bloc/user_cubit.dart';
 import 'package:test_project/custom_widget/text_field_input.dart';
+import 'package:test_project/helper/firebaseHelper.dart';
 import 'package:test_project/helper/nav_helper.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:test_project/model/userData_model.dart';
 import '../custom_widget/button.dart';
 import '../helper/utils.dart';
 
@@ -97,11 +100,17 @@ class LoginScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  customButton(buttonTitle: "Login",onTap: (){
+                  customButton(buttonTitle: "Login",onTap: ()async{
                     if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      openScreen(homeScreenAdmin);
-                    }
+                     var data = await context.read<UserCubit>().login(email.text,password.text,context);
+                      if(data !=null){
+                            if (data.isAdmin == true) {
+                              openScreen(homeScreenAdmin);
+                            } else {
+                              openScreen(homeScreenUser);
+                            }
+                          }
+                        }
                   }),
 
                 ],

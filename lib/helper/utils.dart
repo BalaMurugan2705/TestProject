@@ -17,6 +17,37 @@ bool isEmailValid(String email) {
   return true;
 }
 
+enum ToastStatusEnum { success, warning, error }
+
+status(String value) {
+  List<String> sample = [];
+  switch (value) {
+    case "Todo":
+      sample = ["InProgress", "Completed"];
+      break;
+    case "InProgress":
+      sample = ["Todo", "Completed"];
+      break;
+    case "Completed":
+      sample = ["Todo", "InProgress"];
+      break;
+    default:
+      sample = ["Todo", "InProgress", "Completed"];
+      break;
+  }
+  return sample;
+}
+
+extension StringCasingExtension on String {
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
+}
+
 class TaskModel {
   String taskTitle;
   String taskDescription;
@@ -24,5 +55,8 @@ class TaskModel {
   String status;
 
   TaskModel(
-      {this.assignee = "", this.taskDescription = "", this.taskTitle = "",this.status=""});
+      {this.assignee = "",
+      this.taskDescription = "",
+      this.taskTitle = "",
+      this.status = ""});
 }

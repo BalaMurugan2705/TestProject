@@ -42,7 +42,20 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
+    signingConfigs {
+        debug {
+            keyAlias 'alias'
+            keyPassword 'android'
+            storeFile file("/Users/softsuave/Documents/Projects/TestProject/keystore")
+            storePassword 'android'
+        }
+        release {
+            keyAlias 'alias'
+            keyPassword 'android'
+            storeFile file("/Users/softsuave/Documents/Projects/TestProject/keystore")
+            storePassword 'android'
+        }
+    }
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.test_project"
@@ -70,4 +83,5 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
 }

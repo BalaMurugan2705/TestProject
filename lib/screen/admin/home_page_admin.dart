@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:test_project/bloc/user_cubit.dart';
 import 'package:test_project/custom_widget/button.dart';
+import 'package:test_project/helper/firebaseHelper.dart';
 import 'package:test_project/helper/nav_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 class HomePageAdminScreen extends StatelessWidget {
   const HomePageAdminScreen({Key? key}) : super(key: key);
@@ -10,9 +12,16 @@ class HomePageAdminScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    context.read<UserCubit>().getTaskList(context);
     return Scaffold(
+      appBar:AppBar(
+        actions: [
+          IconButton(onPressed: (){
+            openScreen(landingRoute);
 
+          }, icon: Icon(Icons.login))
+        ],
+      ) ,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -21,54 +30,58 @@ class HomePageAdminScreen extends StatelessWidget {
               child: BlocBuilder<UserCubit, UserDataState>(
                   builder: (context, state) {
                 var dataSource = UserdataSource(context, state);
-                print(state.taskList?.length);
-                return Column(crossAxisAlignment: CrossAxisAlignment.start,
+                print(state.userData?.name);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          top: size.height * 0.1, bottom: size.height * ( state.taskList!.isNotEmpty?0.05:0.2)),
+                          top: size.height * 0.1,
+                          bottom: size.height *
+                              (0.05
+                                 )),
                       child: const Text(
                         "Welcome, Admin \nHere you can create task",
-                        style:
-                            TextStyle(fontWeight: FontWeight.w400, fontSize: 24),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 24),
                       ),
                     ),
                     Visibility(
-                      visible:  state.taskList?.length != 0,
+                      visible: state.taskData?.task?.length != null,
                       child: PaginatedDataTable(
-                          rowsPerPage:  (state.taskList?.length??1)>0?(state.taskList?.length??1):1,
+                          onPageChanged: (int index) {},
+                          rowsPerPage: (state.taskData?.task?.length ?? 1) > 0
+                              ? (state.taskData?.task?.length ?? 1)
+                              : 1,
                           showCheckboxColumn: false,
                           columns: const [
                             DataColumn(
                               label: Text(
                                 "Task Name",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13),
+                                    fontWeight: FontWeight.w700, fontSize: 13),
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 "Assignee",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13),
+                                    fontWeight: FontWeight.w700, fontSize: 13),
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 "Status",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13),
+                                    fontWeight: FontWeight.w700, fontSize: 13),
                               ),
                             ),
                           ],
                           source: dataSource),
                     ),
-                    Visibility(
-                        visible: state.taskList!.isNotEmpty,
-                        child: SizedBox(height: size.height *0.15,)),
+                    SizedBox(
+                      height: size.height * 0.15,
+                    ),
                     customButton(
                         buttonTitle: "Create New Task",
                         icon: Icons.add,
@@ -82,7 +95,6 @@ class HomePageAdminScreen extends StatelessWidget {
           ),
         ),
       ),
-
     );
   }
 }
@@ -101,7 +113,7 @@ class UserdataSource extends DataTableSource {
       cells: [
         DataCell(
           Text(
-            state!.taskList![index].taskTitle,
+            state!.taskData?.task![index].taskTitle ?? "",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -112,7 +124,7 @@ class UserdataSource extends DataTableSource {
         ),
         DataCell(
           Text(
-            state!.taskList![index].assignee,
+            state?.taskData?.task?[index].assignee ?? "",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -121,17 +133,16 @@ class UserdataSource extends DataTableSource {
             ),
           ),
         ),
-        DataCell(
-          Text(
-            state!.taskList![index].status,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 13,
-              color: Colors.black,
-            ),
-          ),
-        ),
+        DataCell(customContainer(state?.taskData?.task?[index].status ?? "",
+            size: 13,
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            color: state?.taskData?.task?[index].status?.toLowerCase() ==
+                    "inprogress"
+                ? Colors.orange
+                : state?.taskData?.task?[index].status?.toLowerCase() ==
+                        "completed"
+                    ? Colors.green
+                    : Colors.grey.shade100)),
       ],
     );
   }
@@ -140,7 +151,7 @@ class UserdataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => (state?.taskList?.length??1)<5?(state?.taskList?.length??1):5;
+  int get rowCount => (state?.taskData?.task?.length ?? 0);
 
   @override
   int get selectedRowCount => 0;

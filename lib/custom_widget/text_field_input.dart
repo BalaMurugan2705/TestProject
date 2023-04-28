@@ -9,6 +9,7 @@ class TextFieldButton extends StatelessWidget {
   Function(String)? onChange;
   String? Function(String?)? validate;
   String labelText;
+  String? hint;
   double? fontsize;
   double? borderRadius;
   Color? color;
@@ -28,6 +29,7 @@ class TextFieldButton extends StatelessWidget {
   FocusNode? focusNode;
   TextFieldButton(
       {Key? key,
+        this.hint,
         this.suffix,
         this.inputFormat,
         this.enableColor,
@@ -71,6 +73,9 @@ class TextFieldButton extends StatelessWidget {
           border: InputBorder.none,
           labelText: labelText,
           suffix: suffix,
+          hintText:hint ,
+          hintStyle: TextStyle(fontSize: 12),
+          alignLabelWithHint: true,
           labelStyle: TextStyle(
               fontWeight: fontweight,
               fontSize: fontsize ?? 16,
