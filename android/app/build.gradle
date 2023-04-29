@@ -46,13 +46,13 @@ android {
         debug {
             keyAlias 'alias'
             keyPassword 'android'
-            storeFile file("/Users/softsuave/Documents/Projects/TestProject/keystore")
+            storeFile file("D:\\Flutter_projects\\keystore")
             storePassword 'android'
         }
         release {
             keyAlias 'alias'
             keyPassword 'android'
-            storeFile file("/Users/softsuave/Documents/Projects/TestProject/keystore")
+            storeFile file("D:\\Flutter_projects\\keystore")
             storePassword 'android'
         }
     }

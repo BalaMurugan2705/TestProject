@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:test_project/bloc/user_cubit.dart';
 import 'package:test_project/custom_widget/button.dart';
+import 'package:test_project/helper/dialog_helper.dart';
 import 'package:test_project/helper/firebaseHelper.dart';
 import 'package:test_project/helper/nav_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class HomePageAdminScreen extends StatelessWidget {
   const HomePageAdminScreen({Key? key}) : super(key: key);
@@ -14,14 +14,16 @@ class HomePageAdminScreen extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     context.read<UserCubit>().getTaskList(context);
     return Scaffold(
-      appBar:AppBar(
+      appBar: AppBar(
+        leading: Container(),
         actions: [
-          IconButton(onPressed: (){
-            openScreen(landingRoute);
-
-          }, icon: Icon(Icons.login))
+          IconButton(
+              onPressed: () {
+                openScreen(landingRoute, requiresAsInitial: true);
+              },
+              icon: Icon(Icons.login)),
         ],
-      ) ,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -36,49 +38,14 @@ class HomePageAdminScreen extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          top: size.height * 0.1,
-                          bottom: size.height *
-                              (0.05
-                                 )),
+                          top: size.height * 0.1, bottom: size.height * (0.05)),
                       child: const Text(
                         "Welcome, Admin \nHere you can create task",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 24),
                       ),
                     ),
-                    Visibility(
-                      visible: state.taskData?.task?.length != null,
-                      child: PaginatedDataTable(
-                          onPageChanged: (int index) {},
-                          rowsPerPage: (state.taskData?.task?.length ?? 1) > 0
-                              ? (state.taskData?.task?.length ?? 1)
-                              : 1,
-                          showCheckboxColumn: false,
-                          columns: const [
-                            DataColumn(
-                              label: Text(
-                                "Task Name",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 13),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                "Assignee",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 13),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                "Status",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 13),
-                              ),
-                            ),
-                          ],
-                          source: dataSource),
-                    ),
+                    taskTable(state, size, dataSource),
                     SizedBox(
                       height: size.height * 0.15,
                     ),
@@ -97,6 +64,50 @@ class HomePageAdminScreen extends StatelessWidget {
       ),
     );
   }
+
+  Visibility taskTable(
+      UserDataState state, Size size, UserdataSource dataSource) {
+    return Visibility(
+      visible: state.taskData?.task?.length != null,
+      child: PaginatedDataTable(
+          columnSpacing: size.width * 0.1,
+          onPageChanged: (int index) {},
+          rowsPerPage: (state.taskData?.task?.length ?? 1) > 0
+              ? (state.taskData?.task?.length ?? 1)
+              : 1,
+          showCheckboxColumn: false,
+          columns: const [
+            DataColumn(
+              label: Flexible(
+                flex: 1,
+                child: Text(
+                  "Task Name",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Flexible(
+                flex: 1,
+                child: Text(
+                  "Assignee",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Flexible(
+                flex: 1,
+                child: Text(
+                  "Status",
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                ),
+              ),
+            ),
+          ],
+          source: dataSource),
+    );
+  }
 }
 
 class UserdataSource extends DataTableSource {
@@ -109,16 +120,22 @@ class UserdataSource extends DataTableSource {
   DataRow getRow(int index) {
     return DataRow.byIndex(
       index: index,
-      onSelectChanged: (val) {},
+      onSelectChanged: (val) {
+        customModalBottomSheet(
+            context, state!.taskData?.task![index], state?.userData);
+      },
       cells: [
         DataCell(
-          Text(
-            state!.taskData?.task![index].taskTitle ?? "",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 13,
-              color: Colors.black,
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: Text(
+              state!.taskData?.task![index].taskTitle ?? "",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.black,
+              ),
             ),
           ),
         ),

@@ -7,6 +7,7 @@ class TextFieldButton extends StatelessWidget {
   TextEditingController? controller;
   TextInputType? inputType;
   Function(String)? onChange;
+  Function(String)? onEditComplete;
   String? Function(String?)? validate;
   String labelText;
   String? hint;
@@ -42,6 +43,7 @@ class TextFieldButton extends StatelessWidget {
         this.fontsize,
         this.labelText = "",
         this.controller,
+        this.onEditComplete,
         this.onChange,
         this.inputType,
         this.validate,
@@ -58,6 +60,7 @@ class TextFieldButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       onTap: onTap,
+      onFieldSubmitted: onEditComplete,
       inputFormatters: inputFormat,
       controller: controller,
       focusNode: focusNode,
@@ -69,12 +72,13 @@ class TextFieldButton extends StatelessWidget {
           fontWeight: FontWeight.w600, fontSize: 20, color: Colors.black),
       cursorColor:Colors.black,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.only(bottom: 12),
           border: InputBorder.none,
           labelText: labelText,
           suffix: suffix,
           hintText:hint ,
-          hintStyle: TextStyle(fontSize: 12),
+          hintStyle: TextStyle(fontSize: 12,
+          ),
           alignLabelWithHint: true,
           labelStyle: TextStyle(
               fontWeight: fontweight,

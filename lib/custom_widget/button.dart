@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../helper/utils.dart';
 
-Widget customButton({String? buttonTitle,Function()? onTap,IconData? icon}) {
+Widget customButton({String? buttonTitle,Function()? onTap,IconData? icon,Color?color}) {
   return InkWell(
     onTap: onTap,
     child: Container(
@@ -11,7 +11,7 @@ Widget customButton({String? buttonTitle,Function()? onTap,IconData? icon}) {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.black
+          color: color??Colors.black
       ),
       child: Row(mainAxisAlignment: MainAxisAlignment.center,
         children: [

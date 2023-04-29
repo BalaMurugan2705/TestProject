@@ -34,14 +34,17 @@ class Task {
   String? assignee;
   String? taskTitle;
   String? status;
-
-  Task({this.taskDescription, this.assignee, this.taskTitle, this.status});
+  String? remarks;
+  String? sNo;
+  Task({this.taskDescription, this.assignee, this.taskTitle, this.status,this.remarks,this.sNo});
 
   Task.fromJson(Map<String, dynamic> json) {
     taskDescription = json['taskDescription'];
     assignee = json['assignee'];
     taskTitle = json['taskTitle'];
     status = json['status'];
+    remarks = json['remarks'];
+    sNo = json['sNo'];
   }
 
   Map<String, dynamic> toJson() {
@@ -50,6 +53,8 @@ class Task {
     data['assignee'] = assignee;
     data['taskTitle'] = taskTitle;
     data['status'] = status;
+    data['remarks'] = remarks;
+    data['sNo'] = sNo;
     return data;
   }
 }

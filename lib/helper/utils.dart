@@ -19,24 +19,7 @@ bool isEmailValid(String email) {
 
 enum ToastStatusEnum { success, warning, error }
 
-status(String value) {
-  List<String> sample = [];
-  switch (value) {
-    case "Todo":
-      sample = ["InProgress", "Completed"];
-      break;
-    case "InProgress":
-      sample = ["Todo", "Completed"];
-      break;
-    case "Completed":
-      sample = ["Todo", "InProgress"];
-      break;
-    default:
-      sample = ["Todo", "InProgress", "Completed"];
-      break;
-  }
-  return sample;
-}
+var taskStatus = ["Todo", "Inprogress", "Completed"];
 
 extension StringCasingExtension on String {
   String toCapitalized() =>
@@ -48,15 +31,3 @@ extension StringCasingExtension on String {
       .join(' ');
 }
 
-class TaskModel {
-  String taskTitle;
-  String taskDescription;
-  String assignee;
-  String status;
-
-  TaskModel(
-      {this.assignee = "",
-      this.taskDescription = "",
-      this.taskTitle = "",
-      this.status = ""});
-}
